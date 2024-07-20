@@ -20,26 +20,27 @@ Future<void> initDependencies() async {
 }
 
 void _initAuth() {
-  serviceLocator.registerFactory<AuthRemoteDataSource>(() {
-    return AuthRemoteDataSourceImpl(supabaseClient: serviceLocator());
-  });
-
-  serviceLocator.registerFactory<AuthRepository>(() {
-    return AuthRepositoryImpl(remoteDataSource: serviceLocator());
-  });
-
-  serviceLocator.registerFactory(() {
-    return UserSignUp(authRepository: serviceLocator());
-  });
-
-  serviceLocator.registerFactory(() {
-    return UserLogin(authRepository: serviceLocator());
-  });
-
-  serviceLocator.registerLazySingleton(() {
-    return AuthBloc(
-      userSignUp: serviceLocator(),
-      userLogin: serviceLocator(),
-    );
-  });
+  serviceLocator
+    // data source (here we create function which deal with the supabase in real and give raw data model and model extends the entities)
+    ..registerFactory<AuthRemoteDataSource>(() {
+      return AuthRemoteDataSourceImpl(supabaseClient: serviceLocator());
+    })
+    // repository (utilies the data resource function and get success or error and handles them)
+    ..registerFactory<AuthRepository>(() {
+      return AuthRepositoryImpl(remoteDataSource: serviceLocator());
+    })
+    // (usecase) is a single responsibility class which use repository function (which in turn use data source fn) and gives us the entity
+    ..registerFactory(() {
+      return UserSignUp(authRepository: serviceLocator());
+    })
+    ..registerFactory(() {
+      return UserLogin(authRepository: serviceLocator());
+    })
+    // bloc deals with the State of our application
+    ..registerLazySingleton(() {
+      return AuthBloc(
+        userSignUp: serviceLocator(),
+        userLogin: serviceLocator(),
+      );
+    });
 }
