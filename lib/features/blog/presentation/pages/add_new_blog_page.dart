@@ -86,13 +86,14 @@ class _AddNewBlogPageState extends State<AddNewBlogPage> {
                                 selectedTopics.add(e);
                               }
                               setState(() {});
-                              print(selectedTopics);
                             },
                             child: Chip(
                               label: Text(e),
-                              side: BorderSide(
-                                color: AppPallete.borderColor,
-                              ),
+                              side: selectedTopics.contains(e)
+                                  ? null
+                                  : BorderSide(
+                                      color: AppPallete.borderColor,
+                                    ),
                               color: selectedTopics.contains(e)
                                   ? WidgetStatePropertyAll(AppPallete.gradient1)
                                   : null,
