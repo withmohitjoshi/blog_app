@@ -1,4 +1,5 @@
 import 'package:blog_app/core/common/cubits/app_user/app_user_cubit.dart';
+import 'package:blog_app/core/network/connection_checker.dart';
 import 'package:blog_app/core/secrets/app_secret.dart';
 import 'package:blog_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:blog_app/features/auth/data/repositories/auth_repository_impl.dart';
@@ -10,9 +11,11 @@ import 'package:blog_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:blog_app/features/blog/data/datasources/blog_remote_data_source.dart';
 import 'package:blog_app/features/blog/data/repositories/blog_repository_impl.dart';
 import 'package:blog_app/features/blog/domain/repository/blog_repository.dart';
+import 'package:blog_app/features/blog/domain/usecases/get_all_blogs.dart';
 import 'package:blog_app/features/blog/domain/usecases/upload_blog.dart';
 import 'package:blog_app/features/blog/presentation/bloc/blog/blog_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final serviceLocator = GetIt.instance;
@@ -28,6 +31,11 @@ Future<void> initDependencies() async {
 
   // core
   serviceLocator.registerLazySingleton(() => AppUserCubit());
+
+  serviceLocator.registerFactory(() => InternetConnection());
+
+  serviceLocator.registerFactory<ConnectionChecker>(
+      () => ConnectionCheckerImpl(internetConnection: serviceLocator()));
 }
 
 void _initAuth() {
@@ -38,7 +46,10 @@ void _initAuth() {
     })
     // repository (utilies the data resource function and get success or error and handles them)
     ..registerFactory<AuthRepository>(() {
-      return AuthRepositoryImpl(remoteDataSource: serviceLocator());
+      return AuthRepositoryImpl(
+        remoteDataSource: serviceLocator(),
+        connectionChecker: serviceLocator(),
+      );
     })
     // (usecase) is a single responsibility class which use repository function (which in turn use data source fn) and gives us the entity
     ..registerFactory(() {
@@ -75,10 +86,14 @@ void _initBlog() {
     ..registerFactory(() {
       return UploadBlog(blogRepository: serviceLocator());
     })
+    ..registerFactory(() {
+      return GetAllBlogs(blogRepository: serviceLocator());
+    })
     // bloc deals with the State of our application
     ..registerLazySingleton(() {
       return BlogBloc(
         uploadBlog: serviceLocator(),
+        getAllBlogs: serviceLocator(),
       );
     });
 }
