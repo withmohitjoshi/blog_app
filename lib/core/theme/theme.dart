@@ -23,11 +23,10 @@ class AppTheme {
       side: BorderSide.none,
     ),
     inputDecorationTheme: InputDecorationTheme(
-      contentPadding: EdgeInsets.all(27),
-      enabledBorder: _border(),
-      focusedBorder: _border(
-        AppPallete.gradient2,
-      ),
-    ),
+        contentPadding: EdgeInsets.all(27),
+        enabledBorder: _border(),
+        focusedBorder: _border(AppPallete.gradient2),
+        errorBorder: _border(AppPallete.errorColor),
+        border: _border()),
   );
 }

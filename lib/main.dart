@@ -49,6 +49,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         LoginPage.routeName: (context) => LoginPage(),
         SignupPage.routeName: (context) => SignupPage(),
+        BlogPage.routeName: (context) => BlogPage(),
         AddNewBlogPage.routeName: (context) => AddNewBlogPage(),
       },
       // initialRoute: LoginPage.routeName,

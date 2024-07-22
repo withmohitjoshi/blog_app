@@ -16,7 +16,7 @@ class BlogModel extends Blog {
       'poster_id': posterId,
       'title': title,
       'content': content,
-      'image_rl': imageUrl,
+      'image_url': imageUrl,
       'topics': topics,
       'updated_at': updatedAt.toIso8601String(),
     };

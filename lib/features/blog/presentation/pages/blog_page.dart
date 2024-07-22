@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BlogPage extends StatelessWidget {
+  static const String routeName = "blog_page";
   const BlogPage({super.key});
 
   @override
