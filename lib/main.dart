@@ -3,6 +3,7 @@ import 'package:blog_app/core/theme/theme.dart';
 import 'package:blog_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:blog_app/features/auth/presentation/pages/login_page.dart';
 import 'package:blog_app/features/auth/presentation/pages/signup_page.dart';
+import 'package:blog_app/features/blog/presentation/bloc/blog/blog_bloc.dart';
 import 'package:blog_app/features/blog/presentation/pages/add_new_blog_page.dart';
 import 'package:blog_app/features/blog/presentation/pages/blog_page.dart';
 import 'package:blog_app/init_dependencies.dart';
@@ -19,6 +20,7 @@ void main() async {
     providers: [
       BlocProvider(create: (context) => serviceLocator<AppUserCubit>()),
       BlocProvider(create: (context) => serviceLocator<AuthBloc>()),
+      BlocProvider(create: (context) => serviceLocator<BlogBloc>()),
     ],
     child: const MyApp(),
   ));

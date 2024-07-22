@@ -1,4 +1,5 @@
 import 'package:blog_app/core/common/entities/user.dart';
+import 'package:blog_app/features/blog/data/models/blog_model.dart';
 
 class UserModel extends User {
   UserModel({
