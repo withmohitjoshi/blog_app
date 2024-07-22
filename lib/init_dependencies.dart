@@ -8,6 +8,7 @@ import 'package:blog_app/features/auth/domain/usecases/current_user.dart';
 import 'package:blog_app/features/auth/domain/usecases/user_login.dart';
 import 'package:blog_app/features/auth/domain/usecases/user_sign_up.dart';
 import 'package:blog_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:blog_app/features/blog/data/datasources/blog_local_data_source.dart';
 import 'package:blog_app/features/blog/data/datasources/blog_remote_data_source.dart';
 import 'package:blog_app/features/blog/data/repositories/blog_repository_impl.dart';
 import 'package:blog_app/features/blog/domain/repository/blog_repository.dart';
@@ -15,7 +16,9 @@ import 'package:blog_app/features/blog/domain/usecases/get_all_blogs.dart';
 import 'package:blog_app/features/blog/domain/usecases/upload_blog.dart';
 import 'package:blog_app/features/blog/presentation/bloc/blog/blog_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive/hive.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final serviceLocator = GetIt.instance;
@@ -27,10 +30,14 @@ Future<void> initDependencies() async {
     anonKey: AppSecret.supabaseKey!,
     url: AppSecret.supabaseUrl!,
   );
+  Hive.init((await getApplicationDocumentsDirectory()).path);
+  final box = await Hive.openBox('blogs');
   serviceLocator.registerLazySingleton(() => supabase.client);
 
   // core
   serviceLocator.registerLazySingleton(() => AppUserCubit());
+
+  serviceLocator.registerLazySingleton(() => box);
 
   serviceLocator.registerFactory(() => InternetConnection());
 
@@ -78,9 +85,16 @@ void _initBlog() {
     ..registerFactory<BlogRemoteDataSource>(() {
       return BlogRemoteDataSourceImpl(supabaseClient: serviceLocator());
     })
+    ..registerFactory<BlogLocalDataSource>(() {
+      return BlogLocalDataSourceImpl(box: serviceLocator());
+    })
     // repository (utilies the data resource function and get success or error and handles them)
     ..registerFactory<BlogRepository>(() {
-      return BlogRepositoryImpl(blogRemoteDataSource: serviceLocator());
+      return BlogRepositoryImpl(
+        blogRemoteDataSource: serviceLocator(),
+        connectionChecker: serviceLocator(),
+        blogLocalDataSource: serviceLocator(),
+      );
     })
     // (usecase) is a single responsibility class which use repository function (which in turn use data source fn) and gives us the entity
     ..registerFactory(() {
