@@ -1,16 +1,50 @@
-# blog_app
+# Multi Player TicTacToe Game
 
-A new Flutter project.
+A feature-rich blog app built with Flutter, leveraging Supabase for authentication, storage, and email verification.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- User authentication and registration
+- Create, read, update, and delete blog posts
+- Upload and manage cover images for blog posts
+- Email verification for account security
+- Clean and intuitive user interface
 
-A few resources to get you started if this is your first Flutter project:
+## Running the app
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Clone the repository
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```
+git clone https://github.com/withmohitjoshi/blog_app.git
+```
+
+Navigate to the directory
+
+```
+cd ./blog_app
+```
+
+Install required packages
+
+```
+flutter pub get
+```
+
+Run the App
+
+You need to create a <b>.env</b> in root folder and place variables<br />
+<b>SUPABASE_URL="YOUR_SUPABASE_URL"</b><br/>
+<b>SUPABASE_KEY="YOUR_SUPABASE_KEY"</b>
+
+Run the app
+
+```
+flutter run
+```
+
+## Snapshots
+
+<img src="./snapshots/snap_1.jpg" width="30%"/>
+<img src="./snapshots/snap_2.jpg" width="30%"/>
+<img src="./snapshots/snap_3.jpg" width="30%"/>
+<img src="./snapshots/snap_4.jpg" width="30%"/>
